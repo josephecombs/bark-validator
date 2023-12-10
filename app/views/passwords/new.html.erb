@@ -1,0 +1,11 @@
+<%= form_with url: passwords_path, local: true do |form| %>
+  <div class="field">
+    <%= form.label :password, "Password" %>
+    <%= form.password_field :password, id: 'password', class: 'form-control', required: true %>
+    <div id="password-feedback" class="feedback"></div>
+  </div>
+
+  <%= form.submit "Create Password", class: 'btn btn-primary' %>
+<% end %>
+
+<%= javascript_pack_tag 'password_validation' %>
