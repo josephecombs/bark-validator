@@ -1,4 +1,4 @@
-document.addEventListener('turbolinks:load', () => {
+document.addEventListener('DOMContentLoaded', () => {
   const passwordInput = document.getElementById('password');
   const passwordFeedback = document.getElementById('password-feedback');
 

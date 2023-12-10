@@ -20,7 +20,7 @@ RSpec.describe PasswordsController, type: :controller do
 
         post :create, params: { password: valid_password }
         expect(response).to have_http_status(:ok)
-        expect(JSON.parse(response.body)['message']).to eq('Password is secure and has not been compromised.')
+        expect(JSON.parse(response.body)['message']).to eq(PasswordCheckService::SUCCESS_MESSAGE)
       end
     end
 
@@ -28,10 +28,11 @@ RSpec.describe PasswordsController, type: :controller do
       it 'returns an error message' do
         allow_any_instance_of(PasswordCheckService).to receive(:valid_length?).and_return(false)
         allow_any_instance_of(PasswordCheckService).to receive(:pwned?).and_return(false)
+        allow_any_instance_of(PasswordCheckService).to receive(:response_message).and_return(PasswordCheckService::LENGTH_ERROR_MESSAGE)
 
         post :create, params: { password: short_password }
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(JSON.parse(response.body)['message']).to eq('Password is either too short or has been compromised.')
+        expect(JSON.parse(response.body)['error']).to eq('Password is too short. It must be at least 8 characters.')
       end
     end
 
@@ -39,10 +40,11 @@ RSpec.describe PasswordsController, type: :controller do
       it 'returns an error message' do
         allow_any_instance_of(PasswordCheckService).to receive(:valid_length?).and_return(true)
         allow_any_instance_of(PasswordCheckService).to receive(:pwned?).and_return(true)
+        allow_any_instance_of(PasswordCheckService).to receive(:response_message).and_return(PasswordCheckService::COMPROMISED_PASSWORD_ERROR)
 
         post :create, params: { password: pwned_password }
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(JSON.parse(response.body)['message']).to eq('Password is either too short or has been compromised.')
+        expect(JSON.parse(response.body)['error']).to eq(PasswordCheckService::COMPROMISED_PASSWORD_ERROR)
       end
     end
   end
