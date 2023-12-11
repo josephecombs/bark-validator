@@ -1,0 +1,32 @@
+[data-tooltip] {
+  position: relative;
+  border-bottom: 1px dashed #000;
+  cursor: help
+}
+
+[data-tooltip]:hover::after,
+[data-tooltip]:hover::before { /* Show the tooltip on hover */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+[data-tooltip]::after {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  content: attr(data-tooltip);
+  left: 0;
+  top: calc(100%); /* Add a small space between the element and the tooltip */
+  border-radius: 3px;
+  box-shadow: 0 0 5px 2px rgba(100, 100, 100, 0.6);
+  background-color: white;
+  z-index: 10;
+  padding: 8px;
+  width: 300px;
+  transform: translateY(-20px);
+  transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+}
+
+[data-tooltip]:hover::after { /* Maintain visibility when hovering over the tooltip */
+  pointer-events: auto;
+}

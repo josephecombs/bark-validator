@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   const passwordInput = document.getElementById('password');
+  const form = document.getElementById('new_password_form');
   const passwordFeedback = document.getElementById('password-feedback');
 
   const validatePasswordLength = (password) => {
@@ -8,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const updateFeedback = (isValid) => {
     if (isValid) {
-      passwordFeedback.textContent = 'Password length is sufficient.';
+      passwordFeedback.textContent = '';
       passwordFeedback.classList.remove('text-danger');
       passwordFeedback.classList.add('text-success');
     } else {
@@ -24,4 +25,19 @@ document.addEventListener('DOMContentLoaded', () => {
       updateFeedback(isValid);
     });
   }
+
+  form.addEventListener('ajax:success', (event) => {
+    const [data, status, xhr] = event.detail;
+    passwordFeedback.textContent = data.message || '';
+    passwordFeedback.classList.add('text-success');
+    passwordFeedback.classList.remove('text-danger');
+  });
+
+  form.addEventListener('ajax:error', (event) => {
+    const [data, status, xhr] = event.detail;
+    passwordFeedback.textContent = data.error || 'An error occurred';
+    passwordFeedback.classList.add('text-danger');
+    passwordFeedback.classList.remove('text-success');
+    passwordInput.focus();
+  });
 });

@@ -2,6 +2,8 @@ require 'net/http'
 require 'json'
 
 class PasswordCheckService
+  # TODO: make this more dynamic and prepared for possible future password complexity demands
+
   attr_accessor :response_message
 
   PWNED_API_URL = 'https://api.pwnedpasswords.com/range/'.freeze

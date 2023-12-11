@@ -1,8 +1,18 @@
 <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-  <%= form_with url: passwords_path, local: true do |form| %>
+  <%= form_with url: passwords_path, local: false, id: 'new_password_form', html: { 'data-type': 'json' } do |form| %>
     <div class="field">
       <%= form.label :password, "Password" %>
-      <%= form.password_field :password, id: 'password', class: 'form-control', required: true %>
+      <span class="tooltip" data-tooltip="Consider using a leading OSS password manager like Bitwarden for enhanced security.">
+        &#9432;
+      </span>
+      <div class="input-group">
+        <%= form.password_field :password, id: 'password', class: 'form-control', required: true, 'aria-label': 'Password', placeholder: 'Enter Secure Password' %>
+        <div class="input-group-append" style="display: inline-block;">
+          <span class="input-group-text">
+            <i id="togglePassword" class="fas fa-eye" onclick="togglePasswordVisibility();" style="height: 20px; width: 20px; display: inline-block; vertical-align: top; cursor: pointer;">&#128065;</i>
+          </span>
+        </div>
+      </div>
       <div id="password-feedback" class="feedback"></div>
     </div>
 
@@ -11,3 +21,19 @@
 </div>
 
 <%= javascript_pack_tag 'password_validation' %>
+<script>
+
+  function togglePasswordVisibility() {
+    var passwordInput = document.getElementById('password');
+    var togglePasswordIcon = document.getElementById('togglePassword');
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      togglePasswordIcon.classList.remove('fa-eye');
+      togglePasswordIcon.classList.add('fa-eye-slash');
+    } else {
+      passwordInput.type = 'password';
+      togglePasswordIcon.classList.remove('fa-eye-slash');
+      togglePasswordIcon.classList.add('fa-eye');
+    }
+  }
+</script>
